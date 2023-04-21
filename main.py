@@ -18,7 +18,7 @@ class Game(object):
         self.y = width
 
         self.border = True  # Setting: Boarder kills player or not (Default True)
-        self.speedUp = True  # Settign: Player gets faster after eating apple (Default _True)
+        self.speedUp = True  # Setting: Player gets faster after eating apple (Default _True)
 
         self.getFaster = False  # Did the player just ate an apple?
 
@@ -81,6 +81,7 @@ class Player(object):
         self.curDirection = "None"
         self.alive = True
         self.score = 0
+        self.initSpeed = 0
 
     def move(self, direction):  # someone hit a key
         if direction == "UP" and self.curDirection != "DOWN":
@@ -113,14 +114,14 @@ class Player(object):
                 self.head[0] = self.head[0] + 1
 
 
-class Window(QWidget, object):  # gamewindow
+class Window(QWidget, object):  # game-Window
     def __init__(self, game: Game):
         super().__init__()
 
         # timer for repeat
         self.timer = QTimer()
 
-        # Gameinfo
+        # Game-Info
         self.game = game
         self.player = game.player
         self.highscore = [0, 0, 0]
@@ -132,12 +133,9 @@ class Window(QWidget, object):  # gamewindow
         self.form = QFormLayout()  # Layout
 
         # creat board
-        width, hight = 500, 500
 
         board = QtGui.QPixmap(50, 50)
         board.fill(QColor(100, 100, 255))
-
-        img = board.toImage()
 
         # Screen
         self.display = QLabel()
@@ -148,7 +146,7 @@ class Window(QWidget, object):  # gamewindow
         self.displayScore = QLabel("Score: 0")
         self.statusbar.addWidget(self.displayScore)
 
-        # Menuebar
+        # Menubar
         self.menubar = QMenuBar(self)
         self.menubar.setObjectName("menubar")
         self.menu = QMenu("Pause")
@@ -239,7 +237,7 @@ class Window(QWidget, object):  # gamewindow
 
             self.timer.stop()
 
-            x = msg.exec()
+            msg.exec()
 
             # safe highscore
             self.highscore.append(self.player.score)
@@ -247,9 +245,19 @@ class Window(QWidget, object):  # gamewindow
             self.highscore.pop()
 
             # start new game
+            # keep Settings
+            temp_boarder = self.game.border
+            temp_speedUp = self.game.speedUp
+            temp_speed = self.game.player.initSpeed
+
             self.game = Game(self.game.x, self.game.y)
+            self.game.speedUp = temp_speedUp
+            self.game.border = temp_boarder
             self.player = self.game.player
+            self.player.speed = temp_speed
+            self.player.initSpeed = temp_speed
             self.timer.start()
+            #
 
             # update highscore
             self.displayHighScore.setText(
@@ -329,6 +337,7 @@ class Ui_MainWindow(object):
 
     def speedSlider(self, value):
         self.game.game.player.speed = value
+        self.game.game.player.initSpeed = value
 
     def submit(self):
         if self.checkBoxBorder.isChecked():
@@ -357,7 +366,7 @@ class Ui_MainWindow(object):
 app = QApplication(sys.argv)
 
 # game
-win = Window(Game(30, 30))
+win = Window(Game(60, 60))
 
 # settings
 MainWindow = QMainWindow()
