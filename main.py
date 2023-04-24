@@ -81,7 +81,13 @@ class Snake(qw.QWidget):
             if self.lastDir == "Right":
                 self.headX +=1
 
+
             self.snakeLoc.insert(0, (self.headX, self.headY))
+
+            if self.snakeLoc[0] in self.fruits:
+                self.snakeLen += 1
+                self.fruits.remove(self.snakeLoc[0])
+
             if len(self.snakeLoc) > self.snakeLen:
                 self.snakeLoc.pop()
 
@@ -103,7 +109,7 @@ class Snake(qw.QWidget):
         if rndNum == 0:
             rndX = random.randint(0,33)
             rndY = random.randint(0,33)
-            while (rndX == self.headX and rndY == self.HeadX):
+            while ((rndX,rndY) in self.snakeLoc):
                 rndX = random.randint(0, 33)
                 rndY = random.randint(0, 33)
 
