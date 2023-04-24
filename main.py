@@ -41,6 +41,8 @@ class Snake(qw.QWidget):
 
         self.headX = 10
         self.headY = 10
+        self.snakeLen = 1
+        self.snakeLoc = [(self.headX, self.headY)]
 
         self.pic.setPixelColor(self.headX,self.headY, qc.Qt.darkGreen)
 
@@ -70,7 +72,6 @@ class Snake(qw.QWidget):
     def timerFunction(self):
         if self.moving == True:
             self.spawnFruit()
-            self.pic.setPixelColor(self.headX, self.headY, qc.Qt.gray)
             if self.lastDir == "Up":
                 self.headY -=1
             if self.lastDir == "Down":
@@ -79,6 +80,15 @@ class Snake(qw.QWidget):
                 self.headX -=1
             if self.lastDir == "Right":
                 self.headX +=1
+
+            self.snakeLoc.insert(0, (self.headX, self.headY))
+            if len(self.snakeLoc) > self.snakeLen:
+                self.snakeLoc.pop()
+
+            self.pic.fill(qc.Qt.gray)
+
+            for loc in self.snakeLoc:
+                self.pic.setPixelColor(loc[0], loc[1], qc.Qt.darkGreen)
 
             for fruit in self.fruits:
                 self.pic.setPixelColor(fruit[0], fruit[1], qc.Qt.red)
