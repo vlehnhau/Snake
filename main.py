@@ -29,6 +29,7 @@ class Snake(qw.QWidget):
         self.moving = False
         self.lastDir = None
 
+        self.fruits = []
         #Bild von Spiel
         game = qw.QLabel(self)
         self.pic = qg.QImage(32,32, qg.QImage.Format_RGBA8888)
@@ -68,6 +69,7 @@ class Snake(qw.QWidget):
 
     def timerFunction(self):
         if self.moving == True:
+            self.spawnFruit()
             self.pic.setPixelColor(self.headX, self.headY, qc.Qt.gray)
             if self.lastDir == "Up":
                 self.headY -=1
@@ -77,10 +79,27 @@ class Snake(qw.QWidget):
                 self.headX -=1
             if self.lastDir == "Right":
                 self.headX +=1
+
+            for fruit in self.fruits:
+                self.pic.setPixelColor(fruit[0], fruit[1], qc.Qt.red)
+
             self.pic.setPixelColor(self.headX, self.headY, qc.Qt.darkGreen)
             scaledPic = self.pic.scaled(500, 500)
             game = self.findChild(qw.QLabel)
             game.setPixmap(qg.QPixmap.fromImage(scaledPic))
+
+    def spawnFruit(self):
+        rndNum = random.randint(0,11)
+        if rndNum == 0:
+            rndX = random.randint(0,33)
+            rndY = random.randint(0,33)
+            while (rndX == self.headX and rndY == self.HeadX):
+                rndX = random.randint(0, 33)
+                rndY = random.randint(0, 33)
+
+            self.fruits.append((rndX,rndY))
+
+
 
 
 
@@ -92,7 +111,7 @@ class Snake(qw.QWidget):
 
 if __name__=="__main__":
     app = qw.QApplication(sys.argv)
-    # win = MainWindow()
+    #win = MainWindow()
     win = Snake()
     win.show()
     sys.exit(app.exec_())
