@@ -29,12 +29,13 @@ class Snake(qw.QWidget):
         self.moving = False
         self.lastDir = None
 
+        self.borders = False
+
         self.fruits = []
         #Bild von Spiel
         game = qw.QLabel(self)
         self.pic = qg.QImage(32,32, qg.QImage.Format_RGBA8888)
         self.pic.fill(qc.Qt.gray)
-        # pic.setPixel(10,10, 0x00ff00ff) so färbt man Pixel
 
 
 
@@ -44,7 +45,7 @@ class Snake(qw.QWidget):
         self.snakeLen = 1
         self.snakeLoc = [(self.headX, self.headY)]
 
-        self.pic.setPixelColor(self.headX,self.headY, qc.Qt.darkGreen)
+        self.pic.setPixelColor(self.headX,self.headY, qc.Qt.green)
 
         # Timer
         self.timer = qc.QTimer()
@@ -81,6 +82,24 @@ class Snake(qw.QWidget):
             if self.lastDir == "Right":
                 self.headX +=1
 
+            if self.borders:
+                if self.headX < 0 or self.headX > 31 or self.headY < 0 or self.headY > 31:
+                    self.timer.stop()
+                    # add Function for ending Game
+            else:
+                if self.headX < 0:
+                    self.headX = 31
+                if self.headX > 31:
+                    self.headX = 0
+                if self.headY < 0:
+                    self.headY = 31
+                if self.headY > 31:
+                    self.headY = 0
+
+
+            if ((self.headX, self.headY) in self.snakeLoc):
+                self.timer.stop()
+                # add Function for ending Game
 
             self.snakeLoc.insert(0, (self.headX, self.headY))
 
@@ -95,11 +114,12 @@ class Snake(qw.QWidget):
 
             for loc in self.snakeLoc:
                 self.pic.setPixelColor(loc[0], loc[1], qc.Qt.darkGreen)
+            self.pic.setPixelColor(self.headX, self.headY, qc.Qt.green)
+
 
             for fruit in self.fruits:
                 self.pic.setPixelColor(fruit[0], fruit[1], qc.Qt.red)
 
-            self.pic.setPixelColor(self.headX, self.headY, qc.Qt.darkGreen)
             scaledPic = self.pic.scaled(500, 500)
             game = self.findChild(qw.QLabel)
             game.setPixmap(qg.QPixmap.fromImage(scaledPic))
@@ -107,11 +127,11 @@ class Snake(qw.QWidget):
     def spawnFruit(self):
         rndNum = random.randint(0,11)
         if rndNum == 0:
-            rndX = random.randint(0,33)
-            rndY = random.randint(0,33)
+            rndX = random.randint(0,32)
+            rndY = random.randint(0,32)
             while ((rndX,rndY) in self.snakeLoc):
-                rndX = random.randint(0, 33)
-                rndY = random.randint(0, 33)
+                rndX = random.randint(0, 32)
+                rndY = random.randint(0, 32)
 
             self.fruits.append((rndX,rndY))
 
