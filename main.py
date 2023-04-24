@@ -1,4 +1,6 @@
+import random
 import sys
+import numpy
 from PyQt5 import QtWidgets as qw
 from PyQt5 import QtGui as qg
 from PyQt5 import QtCore as qc
@@ -43,37 +45,42 @@ class Snake(qw.QWidget):
 
         # Timer
         self.timer = qc.QTimer()
-        self.timer.setInterval(300)  # Timer-Reset alle 300ms
+        self.timer.setInterval(1000)  # Timer-Reset alle 300ms
+        self.timer.timeout.connect(self.timerFunction)
+        self.timer.start(300)
 
         scaledPic = self.pic.scaled(500, 500)
         game.setPixmap(qg.QPixmap.fromImage(scaledPic))
     def keyPressEvent(self, e):
         if self.moving == False: self.moving = True
         if e.key() == qc.Qt.Key.Key_Up:
-            self.move("Up")
+            if self.lastDir != "Down":
+                self.lastDir = "Up"
         if e.key() == qc.Qt.Key.Key_Down:
-            self.move("Down")
+            if self.lastDir != "Up":
+                self.lastDir = "Down"
         if e.key() == qc.Qt.Key.Key_Left:
-            self.move("Left")
+            if self.lastDir != "Right":
+                self.lastDir = "Left"
         if e.key() == qc.Qt.Key.Key_Right:
-            self.move("Right")
+            if self.lastDir != "Left":
+                self.lastDir = "Right"
 
-
-    def move(self, dir):
-        self.pic.setPixelColor(self.headX, self.headY, qc.Qt.gray)
-        if dir == "Up":
-            self.headY -= 1
-        if dir == "Down":
-            self.headY += 1
-        if dir == "Left":
-            self.headX -= 1
-        if dir == "Right":
-            self.headX += 1
-        self.lastDir = dir
-        self.pic.setPixelColor(self.headX, self.headY, qc.Qt.darkGreen)
-        scaledPic = self.pic.scaled(500, 500)
-        game = self.findChild(qw.QLabel)
-        game.setPixmap(qg.QPixmap.fromImage(scaledPic))
+    def timerFunction(self):
+        if self.moving == True:
+            self.pic.setPixelColor(self.headX, self.headY, qc.Qt.gray)
+            if self.lastDir == "Up":
+                self.headY -=1
+            if self.lastDir == "Down":
+                self.headY +=1
+            if self.lastDir == "Left":
+                self.headX -=1
+            if self.lastDir == "Right":
+                self.headX +=1
+            self.pic.setPixelColor(self.headX, self.headY, qc.Qt.darkGreen)
+            scaledPic = self.pic.scaled(500, 500)
+            game = self.findChild(qw.QLabel)
+            game.setPixmap(qg.QPixmap.fromImage(scaledPic))
 
 
 
@@ -91,3 +98,5 @@ if __name__=="__main__":
     sys.exit(app.exec_())
 
 
+# Bugs die noch gefixt werden müssen:
+# 1. Rückwärts laufen beim schnellen Richtungswechsel
