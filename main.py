@@ -9,15 +9,36 @@ class MainWindow(qw.QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Main Menu")
+        self.setGeometry(100, 100, 300, 150)
 
-        cb = qw.QCheckBox()
-        cb.setChecked(False)
+        # Border CheckBox
+        borderCB = qw.QCheckBox()
+        borderCB.setChecked(False)
+        borderCB.setToolTip("Checked: Die when hitting the border")
 
+        # Speed Slider
+        speedSL = qw.QSlider(qc.Qt.Horizontal)
+        speedSL.setMinimum(1)
+        speedSL.setMaximum(10)
+        speedSL.setValue(5)
+        speedSL.setToolTip("Decide how fast the game is")
+
+        # Fruits Slider
+        fruitsSL = qw.QSlider(qc.Qt.Horizontal)
+        fruitsSL.setMinimum(1)
+        fruitsSL.setMaximum(10)
+        fruitsSL.setValue(5)
+        fruitsSL.setToolTip("Decide how often fruits spawn")
+
+        startBU = qw.QPushButton("Start")
+        startBU.setToolTip("Start the game with your settings")
+
+        # Layout of Main Menu
         layout = qw.QFormLayout()
-        layout.addRow(qw.QLabel("name:"), qw.QTextEdit("User"))
-        layout.addRow(qw.QLabel("speed:"), qw.QTextEdit("5"))
-        layout.addRow(qw.QLabel("border:"), cb)
-        layout.addRow(qw.QPushButton("Start"))
+        layout.addRow(qw.QLabel("border:"), borderCB)
+        layout.addRow(qw.QLabel("speed: "), speedSL)
+        layout.addRow(qw.QLabel("fruits: "), fruitsSL)
+        layout.addRow(startBU)
         self.setLayout(layout)
 
 class Snake(qw.QWidget):
@@ -36,7 +57,6 @@ class Snake(qw.QWidget):
         game = qw.QLabel(self)
         self.pic = qg.QImage(32,32, qg.QImage.Format_RGBA8888)
         self.pic.fill(qc.Qt.gray)
-
 
 
 
@@ -129,29 +149,29 @@ class Snake(qw.QWidget):
         if rndNum == 0:
             rndX = random.randint(0,32)
             rndY = random.randint(0,32)
-            while ((rndX,rndY) in self.snakeLoc):
+            while ((rndX,rndY) in self.snakeLoc or (rndX,rndY) in self.fruits):
                 rndX = random.randint(0, 32)
                 rndY = random.randint(0, 32)
 
             self.fruits.append((rndX,rndY))
 
-
-
-
-
-
-
-
-
-
-
 if __name__=="__main__":
     app = qw.QApplication(sys.argv)
-    #win = MainWindow()
-    win = Snake()
+    win = MainWindow()
+    #win = Snake()
     win.show()
     sys.exit(app.exec_())
 
 
 # Bugs die noch gefixt werden müssen:
 # 1. Rückwärts laufen beim schnellen Richtungswechsel
+
+# To do:
+# Main Menü ans Spiel anknüpfen (Beim klick auf "Start" öffnet sich das Spiel)
+# Fruit Spawn Rait
+# Speed
+# Border (Funktionalität schon umgesetzt
+# Tooltips
+# Menüleiste (Pausieren, beenden, Punkte)
+# defead Funktion (Endpunktestart restart?)
+# Highscore der vergangenen Spiele
