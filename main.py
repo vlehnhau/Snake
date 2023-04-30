@@ -1,10 +1,10 @@
 import random
 import sys
 
-from PyQt6 import QtGui
-from PyQt6.QtCore import Qt, QTimer, QRect, QCoreApplication, QMetaObject
-from PyQt6.QtGui import QColor, QPixmap
-from PyQt6.QtWidgets import QApplication, QFormLayout, QWidget, QCheckBox, QPushButton, QSlider, QLabel, QMainWindow, \
+from PyQt5 import QtGui
+from PyQt5.QtCore import Qt, QTimer, QRect, QCoreApplication, QMetaObject
+from PyQt5.QtGui import QColor, QPixmap
+from PyQt5.QtWidgets import QApplication, QFormLayout, QWidget, QCheckBox, QPushButton, QSlider, QLabel, QMainWindow, \
     QMenuBar, QStatusBar, QMenu, QMessageBox
 
 
@@ -52,19 +52,19 @@ class Game(object):
     def checkCollision(self):
         temp = self.player.head.copy()  # copy current pos
         if self.player.head[0] <= 0 or self.player.head[0] >= self.x - 1 or self.player.head[1] <= 0 or \
-                self.player.head[1] >= self.y - 1:  # did he hit the boarder?
+                self.player.head[1] >= self.y - 1:  # did he hit the border?
             if self.border:  # if border rule on -> Dead
                 self.player.curDirection = "None"
                 self.player.alive = False
-            else:  # if border rule off -> show up on the other site
+            else:  # if border rule off -> show up on the other side
                 if self.player.head[0] <= 0:
-                    self.player.head[0] = self.y - 1
+                    self.player.head[0] = self.y - 2
                 elif self.player.head[0] >= self.x - 1:
-                    self.player.head[0] = 0
-                elif self.player.head[1] <= 1:
-                    self.player.head[1] = self.x - 1
+                    self.player.head[0] = 1
+                elif self.player.head[1] <= 0:
+                    self.player.head[1] = self.x - 2
                 elif self.player.head[1] >= self.y - 1:
-                    self.player.head[1] = 0
+                    self.player.head[1] = 1
         elif self.player.head[0] == self.apple[0] and self.player.head[1] == self.apple[1]:  # did he hit the apple?
             self.collectApple()
         elif temp in self.player.tail:  # did he hit the tail?
@@ -204,7 +204,8 @@ class Window(QWidget, object):  # game-Window
         # Set player head
         self.game.checkCollision()
         self.player.autoMove()
-        img.setPixelColor(self.player.head[0], self.player.head[1], QColor(100, 155, 0))
+        if (0 < self.player.head[0] < self.game.x -1) and (0 < self.player.head[1] < self.game.y -1):
+            img.setPixelColor(self.player.head[0], self.player.head[1], QColor(100, 155, 0))
 
         # Apple stuff
         img.setPixelColor(self.game.apple[0], self.game.apple[1], QColor(255, 0, 0))
