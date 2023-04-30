@@ -1,10 +1,10 @@
 import random
 import sys
 
-from PyQt5 import QtGui
-from PyQt5.QtCore import Qt, QTimer, QRect, QCoreApplication, QMetaObject
-from PyQt5.QtGui import QColor, QPixmap
-from PyQt5.QtWidgets import QApplication, QFormLayout, QWidget, QCheckBox, QPushButton, QSlider, QLabel, QMainWindow, \
+from PyQt6 import QtGui
+from PyQt6.QtCore import Qt, QTimer, QRect, QCoreApplication, QMetaObject
+from PyQt6.QtGui import QColor, QPixmap
+from PyQt6.QtWidgets import QApplication, QFormLayout, QWidget, QCheckBox, QPushButton, QSlider, QLabel, QMainWindow, \
     QMenuBar, QStatusBar, QMenu, QMessageBox
 
 
