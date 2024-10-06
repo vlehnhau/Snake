@@ -9,15 +9,15 @@ from PyQt6.QtWidgets import QApplication, QFormLayout, QWidget, QCheckBox, QPush
 
 
 class Game(object):
-    def __init__(self, hight: int, width: int):
+    def __init__(self, height: int, width: int):
 
         # Create Player, add apple and define size of board
-        self.player = Player(round(width / 2), round(hight / 2), 1)
+        self.player = Player(round(width / 2), round(height / 2), 1)
         self.currentApple = []
-        self.x = hight
+        self.x = height
         self.y = width
 
-        self.border = True  # Setting: Boarder kills player or not (Default True)
+        self.border = True  # Setting: Border kills player or not (Default True)
         self.speedUp = True  # Setting: Player gets faster after eating apple (Default _True)
 
         self.getFaster = False  # Did the player just ate an apple?
@@ -132,7 +132,7 @@ class Window(QWidget, object):  # game-Window
 
         self.form = QFormLayout()  # Layout
 
-        # creat board
+        # create board
 
         board = QtGui.QPixmap(50, 50)
         board.fill(QColor(100, 100, 255))
@@ -174,8 +174,8 @@ class Window(QWidget, object):  # game-Window
 
     # call in loop
     def onRepeat(self):
-        # erstellen des Speilfeldes
-        width, hight = self.game.x * 10, self.game.y * 10
+        # erstellen des Spielfeldes
+        width, height = self.game.x * 10, self.game.y * 10
 
         board = QtGui.QPixmap(self.game.x, self.game.y)
         board.fill(QColor(100, 100, 255))
@@ -214,7 +214,7 @@ class Window(QWidget, object):  # game-Window
         for i in self.player.tail:
             img.setPixelColor(i[0], i[1], QColor(0, 255, 0))
 
-        scaledBoardImg = img.scaled(width, hight, Qt.AspectRatioMode.KeepAspectRatio)
+        scaledBoardImg = img.scaled(width, height, Qt.AspectRatioMode.KeepAspectRatio)
 
         # show map and score
         self.display.setPixmap(QPixmap.fromImage(scaledBoardImg))
@@ -225,7 +225,7 @@ class Window(QWidget, object):  # game-Window
             self.game.getFaster = False
             self.checkSettings()
 
-        # check if the game ist over
+        # check if the game is over
         self.checkGameEnd()
 
     # Check function
@@ -240,20 +240,20 @@ class Window(QWidget, object):  # game-Window
 
             msg.exec()
 
-            # safe highscore
+            # save highscore
             self.highscore.append(self.player.score)
             self.highscore.sort(reverse=True)
             self.highscore.pop()
 
             # start new game
             # keep Settings
-            temp_boarder = self.game.border
+            temp_border = self.game.border
             temp_speedUp = self.game.speedUp
             temp_speed = self.game.player.initSpeed
 
             self.game = Game(self.game.x, self.game.y)
             self.game.speedUp = temp_speedUp
-            self.game.border = temp_boarder
+            self.game.border = temp_border
             self.player = self.game.player
             self.player.speed = temp_speed
             self.player.initSpeed = temp_speed

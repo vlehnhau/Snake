@@ -22,7 +22,7 @@ As you eat food, your snake becomes longer, making the game progressively harder
 
 ## 📸 Screenshots
 
-Menue
+Menu
 ![Alt text](image.png)
 
 Game
